@@ -148,10 +148,35 @@ Inspired by cutting-edge agentic workflows, Zeus operates in two distinct operat
   4. User confirmation & approval checkpoint
   5. Controlled execution (`terraform apply tfplan`)
 
-### 6. 🚦 Jenkins Automation Hub
+### 6. 🚦 Jenkins Automation Hub & Multi-Cloud Fleet Jobs
 - **Connectivity & Credential Gate**: Verifies Jenkins connectivity (CLI or REST API via URL + User API Token). Clear error notification with configuration prompts if unreachable.
 - **Token-Minimal Pipeline Control**: Trigger parameterized builds, inspect running pipeline stages, and stream progressive logs with automated windowing.
 - **DevOps Loop**: Connects Terraform provisioning output directly into Jenkins pipeline parameters for downstream application deployment.
+- **Multi-Cloud Fleet Jobs (Planned Capability)**:
+  - Automates operational tasks across heterogeneous cloud fleets (AWS EC2, Alibaba Cloud ECS, and generic servers) by delegating to preconfigured Jenkins jobs.
+  - **Featured Example: Install Docker Across Selected Cloud VMs**:
+    - **Scenario**: An engineer selects 3 AWS EC2 instances and 2 Alibaba Cloud ECS instances using `//VMs` or conversational queries.
+    - **Step 1: Target Review (Plan Mode)**: Zeus displays the selected instances, cloud providers, private/public IPs, and parameter preview without running any tasks.
+    - **Step 2: Execution (Build Mode)**: Upon approval, Zeus triggers the preconfigured `Install Docker` job on Jenkins, passing the selected instance IDs and parameters.
+    - **Per-Instance Structured Outcomes**:
+      ```text
+      ┌────────────────────────────────────────────────────────────────────────────────────────┐
+      │                   MULTI-CLOUD FLEET JOB: Install Docker (Job #142)                     │
+      ├──────────────────┬──────────────┬──────────────┬────────────────────────┬──────────────┤
+      │ INSTANCE ID      │ PROVIDER     │ IP           │ OUTCOME                │ DETAILS      │
+      ├──────────────────┼──────────────┼──────────────┼────────────────────────┼──────────────┤
+      │ i-0a1b2c3d4e5f   │ AWS (EC2)    │ 54.210.12.34 │ Installed              │ v26.1.1, OK  │
+      │ i-0b2c3d4e5f6a   │ AWS (EC2)    │ 54.210.12.35 │ Already installed      │ v25.0.3, OK  │
+      │ i-0c3d4e5f6a7b   │ AWS (EC2)    │ 54.210.12.36 │ Installed              │ v26.1.1, OK  │
+      │ i-8vb123456789   │ Ali (ECS)    │ 47.88.12.30  │ Installed              │ v26.1.1, OK  │
+      │ i-8vb987654321   │ Ali (ECS)    │ 47.88.12.31  │ Failed                 │ SSH timeout  │
+      └──────────────────┴──────────────┴──────────────┴────────────────────────┴──────────────┘
+      Summary: 3 Installed, 1 Already installed and healthy, 1 Failed.
+      👉 Retry Failed: Re-run only on failed instances with a single command.
+      ```
+    - **Partial Success & Targeted Retries**: If any instance fails (e.g. SSH timeout or package lock), Zeus reports the exact failure reason and allows the operator to retry *only* the failed nodes without touching the successfully configured VMs.
+  - **Artifact & File Attachment Support**:
+    - The same workflow optionally accepts an artifact or configuration file (e.g., an `nginx.conf`, application deployment `.tar.gz`, or security audit script). Zeus uploads or references the artifact with the Jenkins job to distribute and apply it across the target fleet.
 
 ### 7. 🎨 Diagram-to-Terraform (Draw.io & Vision Pipeline)
 - **Draw.io (`.drawio`, `.xml`) Native Parser**:
@@ -245,13 +270,19 @@ The project is structured into incremental, battle-tested milestones detailed in
 
 1. **Phase 1: Agentic Core, Dependency Harness & Token-Minimal Pipeline** (Terraform & Jenkins preflight, error handling, tool harness, Plan/Build mode switch, Hermes-style persistent memory, Pi-style minimal-token output filter & smart Terraform/Jenkins error parsers).
 2. **Phase 2: Visual IaC Engine** (Draw.io XML parser + PNG vision prompt -> HCL generator -> Review -> `init`/`plan`/`apply`).
-3. **Phase 3: Cloud Discovery, Unified Multi-Cloud VM Manager & Discovery** (`//VMs`, AWS/Alicloud VPCs/Subnets/vSwitches/ECS discovery, `infra.md` export).
+3. **Phase 3: Cloud Discovery, Unified Multi-Cloud VM Manager & Fleet Jobs** (`//VMs`, AWS/Alicloud VPCs/Subnets/vSwitches/ECS discovery, `infra.md` export, Multi-Cloud Fleet Jobs with Jenkins).
 4. **Phase 4: Strict Permission Guardrails & Agentic Ops** (Natural language query engine, destructive action confirmation gates, SSH sessions).
 5. **Phase 5: Extensibility & Packaging** (Plugins, CLI distribution, persistent SQLite state).
 
 ---
 
-## 🤝 Inspirations & Acknowledgments
+## 🤝 Contributing
+
+We welcome contributions! Please read our [**Contributing Guide (CONTRIBUTING.md)**](./CONTRIBUTING.md) for details on code style, safety guardrail policies, token efficiency requirements, and the PR process.
+
+---
+
+## 💡 Inspirations & Acknowledgments
 
 - [earendil-works/pi](https://github.com/earendil-works/pi) - Lightweight agent harness architecture & token-minimal tool philosophy.
 - [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) - Persistent project memory and environmental constraint retention.

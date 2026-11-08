@@ -70,8 +70,8 @@ Zeus enforces a strict separation between inquiry and mutation:
 └──────────────────────────────────┬─────────────────────────────────────┘
                                    │
 ┌──────────────────────────────────▼─────────────────────────────────────┐
-│ PHASE 3: Cloud Discovery, Unified VM Manager (`//VMs`) & infra.md      │
-│         (VPCs, Subnets, vSwitches, ECS, Public IPs, infra.md Exporter)│
+│ PHASE 3: Cloud Discovery, Unified VM Manager, Fleet Jobs & infra.md    │
+│         (VPCs, Subnets, vSwitches, ECS, Fleet Jobs with Jenkins)       │
 └──────────────────────────────────┬─────────────────────────────────────┘
                                    │
 ┌──────────────────────────────────▼─────────────────────────────────────┐
@@ -309,9 +309,9 @@ Transform visual designs into validated, deployable Terraform modules with human
 
 ---
 
-## 📍 Phase 3: Cloud Discovery, Unified VM Manager (`//VMs`) & `infra.md`
+## 📍 Phase 3: Cloud Discovery, Unified VM Manager (`//VMs`), Fleet Jobs & `infra.md`
 
-Enables users to ask about their cloud infrastructure, manage multi-cloud instances, and export audit reports.
+Enables users to ask about their cloud infrastructure, manage multi-cloud instances, trigger fleet jobs via Jenkins, and export audit reports.
 
 ### 3.1 Cloud Discovery Engine (Natural Language Infra Queries)
 - [ ] **Multi-Provider Discovery Tools**:
@@ -371,6 +371,71 @@ Enables users to ask about their cloud infrastructure, manage multi-cloud instan
   - Add/edit custom notes for any instance regardless of cloud provider.
   - Persisted in `~/.zeus/inventory.json`.
 
+### 3.4 Multi-Cloud Fleet Jobs with Jenkins
+Automate operational tasks across heterogeneous compute instances (AWS EC2, Alibaba Cloud ECS, and generic VMs) by delegating execution to preconfigured Jenkins jobs.
+
+- [ ] **MVP Scope & Workflow Definition**:
+  - **Target Selection**: Filter and select target instances across multiple cloud providers using `//VMs select`, tag filters (e.g. `--tag=env:staging`), or conversational natural language.
+  - **Job Selection**: Select from pre-registered, parameterized Jenkins jobs (e.g. `fleet-install-docker`, `fleet-deploy-config`).
+  - **Optional Artifact / File Attachment**: Support passing a configuration file (e.g. `nginx.conf`), an application release archive (`.tar.gz`), or a script reference to be distributed and applied.
+  - **Plan Mode vs Build Mode Separation**:
+    - **Plan Mode (Target Review)**: Read-only verification. Zeus displays a clean preview table of target instances (IDs, names, providers, public/private IPs, credentials profile) and job parameters without triggering any remote changes.
+    - **Build Mode (Execution Trigger)**: Requires explicit operator approval before Zeus initiates the job via the Jenkins API.
+
+- [ ] **Execution Flow & Transport Mechanism**:
+  - Zeus serializes the target instances (IDs, hostnames/IPs, credential references) and any attached artifact path/URI, calling the Jenkins API (`POST /job/{jobName}/buildWithParameters`).
+  - The Jenkins Agent establishes SSH sessions to the target VMs using configured credentials and executes commands with the privileges required by the job (e.g., `sudo`).
+  - **Future Execution Transports**:
+    - *AWS Systems Manager (SSM) Run Command*: Agentless, credential-less execution for EC2 without opening port 22 or managing SSH keys.
+    - *Alibaba Cloud Cloud Assistant RunCommand*: Native agent-based execution for Alibaba Cloud ECS instances.
+
+- [ ] **Docker Installation Job Specification**:
+  - **Distribution Detection**: Inspects `/etc/os-release` to identify the Linux distribution family:
+    - Debian / Ubuntu (`apt-get`)
+    - RHEL / CentOS / Rocky / AlmaLinux (`dnf` / `yum`)
+    - Amazon Linux 2023 (`dnf`)
+    - Alibaba Cloud Linux (`yum`)
+  - **Official Package Setup**: Applies official repository and key setup steps for supported distributions.
+  - **Idempotency & Skip Logic**:
+    - Checks whether Docker is already installed and running (`docker --version` and `systemctl is-active docker`).
+    - If already healthy, marks status as `ALREADY_HEALTHY`, records the active version, and skips reinstallation.
+  - **Post-Install Verification**: Confirms daemon is active (`systemctl status docker`) and records installed Docker version.
+  - **Actionable Error Reporting**: Detects and reports pinpointed failure causes:
+    - *Unsupported Distribution*: e.g. custom or non-systemd Linux distribution.
+    - *SSH Connection Failure*: Connection timeout, port 22 blocked by security group, or key rejection.
+    - *Installation Failure*: Package manager lock (e.g. `apt` lock held), repository mirror failure, or insufficient disk space.
+
+- [ ] **Structured Results & Partial Success Handling**:
+  - Jenkins pipeline produces a structured JSON report (e.g., via workspace artifact or build summary API):
+    ```json
+    {
+      "job_name": "fleet-install-docker",
+      "build_number": 142,
+      "results": [
+        {"id": "i-0a1b2c3d4e5f", "provider": "aws", "ip": "54.210.12.34", "status": "INSTALLED", "details": "Docker v26.1.1, active"},
+        {"id": "i-0b2c3d4e5f6a", "provider": "aws", "ip": "54.210.12.35", "status": "ALREADY_HEALTHY", "details": "Docker v25.0.3, skipped"},
+        {"id": "i-0c3d4e5f6a7b", "provider": "aws", "ip": "54.210.12.36", "status": "INSTALLED", "details": "Docker v26.1.1, active"},
+        {"id": "i-8vb123456789", "provider": "alicloud", "ip": "47.88.12.30", "status": "INSTALLED", "details": "Docker v26.1.1, active"},
+        {"id": "i-8vb987654321", "provider": "alicloud", "ip": "47.88.12.31", "status": "FAILED", "error": "SSH connection timed out on port 22"}
+      ]
+    }
+    ```
+  - Zeus parses this payload and presents the operator with an intuitive outcomes summary.
+  - **Targeted Retry**: Operator can retry *only* the failed instances (`//vms retry 142` or *"Retry failed instances"*), avoiding redundant work on healthy VMs.
+
+- [ ] **Acceptance Scenario**:
+  - End-to-end multi-cloud test run across AWS and Alibaba Cloud verifying:
+    1. **Successful Installation**: An Ubuntu EC2 instance successfully installs Docker and reports `Installed`.
+    2. **Already Configured VM**: An Amazon Linux 2023 EC2 instance with active Docker is detected, skipped, and reports `Already installed and healthy`.
+    3. **Failed VM**: An Alibaba Cloud ECS instance with unreachable port 22 or locked package manager reports `Failed` with the exact failure reason.
+
+- [ ] **Extensible Provider Architecture**:
+  - Designed with an open provider interface to enable future community contributions covering:
+    - **Azure Virtual Machines** (`azure`)
+    - **Google Cloud Compute Engine** (`gcp`)
+    - **Oracle Cloud Infrastructure** (`oci`)
+  - Ensures the Jenkins fleet job execution engine remains provider-agnostic.
+
 ---
 
 ## 📍 Phase 4: Strict Permission Gates & Agentic Ops Guardrails
@@ -420,5 +485,5 @@ Enforces absolute human control over cloud mutations, especially resource destru
 2. 🔄 **Milestone 2**: Project Scaffolding, Mode Switcher, Persistent Memory Store, Preflight Verifiers (Terraform & Jenkins), and Minimal-Token Tool Pipeline.
 3. 🔄 **Milestone 3**: Cloud Discovery Engine (VPCs, Subnets, vSwitches, ECS, Public IPs) & `infra.md` Exporter.
 4. 🔄 **Milestone 4**: Visual IaC Module (Draw.io XML parser + Multimodal Vision converter + HCL Generator with Memory cross-checks).
-5. 🔄 **Milestone 5**: Unified `//VMs` Multi-Cloud & SSH Management Engine (AWS, Alibaba Cloud, Generic SSH, Notes & CLI/TUI).
+5. 🔄 **Milestone 5**: Unified `//VMs` Multi-Cloud & SSH Management Engine, Multi-Cloud Fleet Jobs with Jenkins (AWS, Alibaba Cloud, Generic SSH, Notes & CLI/TUI).
 6. 🔄 **Milestone 6**: Strict Human-in-the-Loop Permission Gates & Blast-Radius Engine.
