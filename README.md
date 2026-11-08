@@ -1,30 +1,38 @@
 # ⚡ Zeus: The Agentic Cloud & Infrastructure Harness
 
-> **Autonomous Cloud Orchestration, Diagram-to-IaC Synthesis, Unified Multi-Cloud VM Control, and Agentic CI/CD.**
+> **Autonomous Cloud Orchestration, Diagram-to-IaC Synthesis, Unified Multi-Cloud VM Control, Agentic CI/CD, Multi-LLM Provider Agility, MCP & Skills Plugins, and Telegram Operations.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Terraform](https://img.shields.io/badge/Terraform-1.5+-623CE4?logo=terraform)](https://www.terraform.io/)
 [![Jenkins](https://img.shields.io/badge/Jenkins-CI%2FCD-D33833?logo=jenkins)](https://www.jenkins.io/)
-[![Architecture](https://img.shields.io/badge/Architecture-Draw.io%20%7C%20Vision-orange)](#-drawio--png-to-terraform-pipeline)
+[![LLM Providers](https://img.shields.io/badge/LLM_Providers-Ollama_%7C_vLLM_%7C_OpenAI_%7C_Anthropic_%7C_Gemini-blue)](#-multi-llm-provider-freedom-provider)
+[![MCP](https://img.shields.io/badge/MCP-Model_Context_Protocol_Enabled-brightgreen)](#-model-context-protocol-mcp-integration)
+[![Telegram](https://img.shields.io/badge/Telegram_Bot-Interactive_Approval_Ops-2CA5E0?logo=telegram)](#-telegram-bot--multi-channel-remote-operations)
 
 ---
 
 ## 🌟 Vision & Overview
 
-**Zeus** is an agentic AI harness engineered specifically for Cloud and DevOps engineers. It bridges the gap between high-level architectural design, infrastructure as code (IaC), CI/CD pipelines, and active fleet operations.
+**Zeus** is an agentic AI harness engineered specifically for Cloud and DevOps engineers. It bridges high-level architectural design, infrastructure as code (IaC), CI/CD pipelines, and active multi-cloud operations into a single conversational and command-driven system.
 
-Instead of jumping between AWS Console, Alibaba Cloud, GCP, Jenkins dashboards, terminal SSH windows, and Terraform repositories, Zeus provides a **single conversational and command-driven agentic harness** inspired by:
-- [**Pi (`earendil-works/pi`)**](https://github.com/earendil-works/pi): Minimalist, resilient, extensible agent loop, **token-minimal task reading**, and terminal ergonomics.
-- [**Hermes Agent (`NousResearch/hermes-agent`)**](https://github.com/NousResearch/hermes-agent): Persistent cross-session project memory, infrastructure topology constraints (on-prem, hybrid, Direct Connect, VPN), and context retention.
-- [**OpenCode (`anomalyco/opencode`)**](https://github.com/anomalyco/opencode): Multi-agent workflow, decoupled **Plan** vs **Build** modes, and robust workspace interaction.
-- [**Herdr (`herdrdev/herdr`)**](https://github.com/herdrdev/herdr): Persistent multi-machine session manager and agent-driven terminal multiplexing.
+Zeus is built with **zero vendor lock-in**:
+- **Multi-LLM Freedom (`/provider`)**: Seamlessly switch between local private models (**Ollama**, **vLLM**) and frontier cloud models (**Anthropic Claude**, **OpenAI**, **Google Gemini**, OpenRouter, DeepSeek) at runtime.
+- **Model Context Protocol (MCP)**: Native MCP client support to dynamically plug in community MCP servers (GitHub, Postgres, Kubernetes, Cloudflare, etc.).
+- **Modular Skills & Plugins**: Extend the harness with self-contained `SKILL.md` workflows and redistributable `plugin.yaml` packages.
+- **Multi-Channel Control (CLI & Telegram)**: Operate from your local interactive terminal or manage infrastructure and authorize blast-radius actions directly from your phone via **Telegram Bot**.
+
+### Key Inspirations & Pillars:
+- [**Pi (`earendil-works/pi`)**](https://github.com/earendil-works/pi): Minimalist agent loop, token-minimal task reading, and dual-stream terminal logs.
+- [**Hermes Agent (`NousResearch/hermes-agent`)**](https://github.com/NousResearch/hermes-agent): Persistent cross-session project memory, infrastructure topology constraints (Direct Connect, VPN, CIDR reservations).
+- [**OpenCode (`anomalyco/opencode`)**](https://github.com/anomalyco/opencode): Decoupled **Plan** vs **Build** modes and resilient workspace orchestration.
+- [**Model Context Protocol (MCP)**](https://modelcontextprotocol.io/): Open standard for dynamic AI tools and resource expansion.
 - [**ec2s (`PYTHON01100100/ec2s`)**](https://github.com/PYTHON01100100/ec2s) & [**a1s (`PYTHON01100100/a1s`)**](https://github.com/PYTHON01100100/a1s): High-speed, terminal-native instance navigation (`k9s` style) across AWS and Alibaba Cloud.
 
 ---
 
 ## 🧭 Dual Operational Modes: `Plan` vs `Build`
 
-Inspired by cutting-edge agentic workflows, Zeus operates in two distinct operational modes to guarantee safety and clarity:
+Zeus enforces strict separation between read-only inquiry and mutating actions across both the CLI and Telegram:
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
@@ -35,250 +43,310 @@ Inspired by cutting-edge agentic workflows, Zeus operates in two distinct operat
 │ • Natural language infra queries │ • Terraform apply & provisioning    │
 │ • Inspect VPCs, subnets, vSwitches│ • Create, update, or stop resources │
 │ • Review ECS & EC2 instances     │ • Execute SSH commands on VMs       │
-│ • Consult on-prem & VPN memory   │ • Trigger Jenkins CI/CD builds     │
+│ • Consult on-prem & VPN memory   │ • Trigger Jenkins CI/CD builds      │
 │ • Generate & inspect Terraform HCL│ • Strict Permission Guardrails      │
-│ • Export audit reports (infra.md)│ • Human approval required to delete │
-│ • ZERO mutation risk             │                                     │
+│ • Read-only MCP queries & tools  │ • Mutating MCP tools & fleet jobs   │
+│ • Export audit reports (infra.md)│ • Mobile human approval to delete   │
+│ • ZERO mutation risk             │   (CLI prompt / Telegram button)    │
 └──────────────────────────────────┴─────────────────────────────────────┘
 ```
 
-- **`PLAN` Mode**: The default safe mode. Ask anything about your running infrastructure, design architecture, simulate costs, and preview `terraform plan` outputs without altering any cloud state.
-- **`BUILD` Mode**: Active execution mode. Applies changes, creates infrastructure, and runs tasks—**always gated by explicit human authorization** for any destructive or high-impact actions.
+- **`PLAN` Mode**: The default safe mode. Query running infrastructure, inspect VPC allocations, preview `terraform plan` outputs, and run diagnostic checks without altering any cloud state.
+- **`BUILD` Mode**: Active execution mode. Provisions infrastructure, updates resources, and runs remote fleet jobs—**always gated by explicit human authorization** for any destructive actions.
 
 ---
 
 ## 🚀 Core Capabilities
 
 ```
-                  ┌──────────────────────────────────────────────┐
-                  │                 ZEUS HARNESS                 │
-                  │   Agentic Core (Planning • Tooling • Ops)    │
-                  └───────┬──────────────┬──────────────┬────────┘
-                          │              │              │
-         ┌────────────────┴──────┐       │       ┌──────┴────────────────┐
-         ▼                       ▼       ▼       ▼                       ▼
-  ┌──────────────┐      ┌─────────────┐ ┌─────────────────┐     ┌────────────────┐
-  │  Terraform   │      │   Jenkins   │ │   Visual IaC    │     │  Unified VMs   │
-  │  Provisioner │      │  Automator  │ │ Draw.io & Image │     │  Multi-Cloud   │
-  │ (Plan/Apply) │      │  (Pipelines)│ │  to Terraform   │     │  (//VMs & SSH) │
-  └──────────────┘      └─────────────┘ └─────────────────┘     └────────────────┘
+                         ┌──────────────────────────────────────────────┐
+                         │                 ZEUS HARNESS                 │
+                         │       Dual Modes: [ PLAN ] | [ BUILD ]       │
+                         │   Channels: Terminal CLI & Telegram Bot      │
+                         └───────┬──────────────┬──────────────┬────────┘
+                                 │              │              │
+        ┌────────────────────────┴──────┐       │       ┌──────┴────────────────────────┐
+        ▼                               ▼       ▼       ▼                               ▼
+ ┌──────────────┐              ┌─────────────┐ ┌─────────────────┐             ┌────────────────┐
+ │  Terraform   │              │   Jenkins   │ │   Visual IaC    │             │  Unified VMs   │
+ │  Provisioner │              │  Automator  │ │ Draw.io & Image │             │  Multi-Cloud   │
+ │ (Plan/Apply) │              │  (Pipelines)│ │  to Terraform   │             │  (//VMs & SSH) │
+ └──────┬───────┘              └──────┬──────┘ └────────┬────────┘             └───────┬────────┘
+        │                             │                 │                              │
+        └─────────────────────────────┼─────────────────┴──────────────────────────────┘
+                                      │
+        ┌─────────────────────────────┴───────────────────────────────┐
+        ▼                                                             ▼
+ ┌─────────────────────────────────────────┐   ┌────────────────────────────────────────┐
+ │        MULTI-LLM ENGINE (/provider)     │   │         EXTENSIBILITY HUB              │
+ │ • Ollama (Local / Offline)              │   │ • Model Context Protocol (MCP Clients) │
+ │ • vLLM (Self-Hosted GPU Cluster)        │   │ • Progressive Skills (SKILL.md)        │
+ │ • Anthropic Claude (3.7 Sonnet / Opus)  │   │ • Modular Plugins (plugin.yaml)        │
+ │ • OpenAI (GPT-4o, o1, o3-mini)          │   │ • Telegram Bot Mobile Approvals        │
+ │ • Google Gemini (2.5 Pro Multimodal)    │   │ • Hermes Persistent Project Memory     │
+ └─────────────────────────────────────────┘   └────────────────────────────────────────┘
 ```
 
-### 1. 🔍 Natural Language Cloud Discovery & `infra.md` Exporter
+---
+
+### 1. 🔀 Multi-LLM Provider Freedom (`/provider`)
+Zeus eliminates lock-in by providing a dynamic LLM client abstraction. You can hot-swap providers and models at any moment using `/provider` or `//provider`:
+
+```bash
+# Interactive selector
+//provider
+
+# Direct CLI switch
+//provider set ollama qwen2.5-coder:32b
+//provider set vllm deepseek-ai/DeepSeek-R1-Distill-Qwen-32B
+//provider set anthropic claude-3-7-sonnet
+//provider set openai gpt-4o
+//provider set gemini gemini-2.5-pro
+
+# List and benchmark providers
+//provider list
+//provider test
+```
+
+| Provider | Ideal Use Case | Endpoint & Configuration |
+|---|---|---|
+| **Ollama** | 100% offline, zero data egress, on-prem air-gapped security | Local daemon (`http://localhost:11434`), auto-detects pulled models |
+| **vLLM** | High-throughput, self-hosted private GPU cluster serving | OpenAI-compatible endpoint (`http://vllm-host:8000/v1`) |
+| **Anthropic Claude** | Deep architectural reasoning, complex Terraform refactors | `ANTHROPIC_API_KEY`, Claude 3.7 Sonnet / Claude 3.5 Sonnet |
+| **OpenAI** | High-speed function calling, agentic coding | `OPENAI_API_KEY`, GPT-4o, o1, o3-mini |
+| **Google Gemini** | Massive context (1M+ tokens), multimodal diagram parsing | `GEMINI_API_KEY`, Gemini 2.5 Pro / Flash |
+| **OpenRouter / DeepSeek** | Unified aggregators, DeepSeek R1 / V3 APIs | Configurable `base_url` + `api_key` in `~/.zeus/config.yaml` |
+
+---
+
+### 2. 🔌 Model Context Protocol (MCP) Integration
+Zeus acts as a first-class **Model Context Protocol (MCP)** host/client. Easily expand Zeus with any community or corporate MCP server without writing custom adapters:
+
+- **Stdio Transport**: Spawns local CLI tools and daemons (`npx`, `uvx`, native binaries).
+- **SSE Transport**: Connects to remote or internal enterprise MCP servers over HTTP/SSE.
+- **Mode-Aware Bridging**: Automatically classifies external MCP tools into `Plan` (read-only queries) vs `Build` (mutating actions).
+
+#### Configuration (`.zeus/mcp.json` or `~/.zeus/mcp.json`):
+```json
+{
+  "mcpServers": {
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": { "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}" }
+    },
+    "postgres-infra": {
+      "command": "uvx",
+      "args": ["mcp-server-postgres", "--connection-string", "${DATABASE_URL}"]
+    },
+    "internal-k8s": {
+      "url": "https://mcp.internal.infra.corp/sse",
+      "transport": "sse"
+    }
+  }
+}
+```
+
+```bash
+# Manage MCP servers
+//mcp list           # View connected servers & discovered tools
+//mcp reload         # Hot-reload tool schemas
+//mcp add <name>     # Register a new MCP server
+```
+
+---
+
+### 3. 🧩 Extensible Skills & Plugin Ecosystem
+Zeus includes a modular extensibility engine inspired by modern progressive disclosure architectures:
+
+- **Skills (`SKILL.md`)**:
+  - Organized in `.zeus/skills/<skill-name>/` or `~/.zeus/skills/`.
+  - Self-contained folders containing prompt guidelines, operational triggers, and companion scripts.
+  - **Progressive Disclosure**: Only compact metadata is indexed initially (< 20 tokens). Full operational instructions are loaded on-demand only when a user task matches the skill triggers.
+- **Plugins (`plugin.yaml`)**:
+  - Package bundles of skills, MCP configurations, custom cloud providers, and hooks into shareable packages.
+  - Install, enable, disable, and update plugins with single commands:
+    ```bash
+    //plugin list
+    //plugin install github.com/zeus-plugins/aws-security
+    //plugin enable aws-security
+    ```
+
+---
+
+### 4. 📱 Telegram Bot & Multi-Channel Remote Operations
+Manage and audit your infrastructure from anywhere. Zeus runs both as an interactive terminal CLI and as a **persistent Telegram Bot daemon**:
+
+```bash
+# Run Zeus as a background Telegram daemon
+zeus serve --channel telegram
+```
+
+#### Telegram Capabilities:
+1. **Full Natural Language Cloud Ops**: Chat with Zeus directly from your smartphone or desktop Telegram client.
+2. **Interactive Inline Keyboards**:
+   - `/provider`: Tap to switch between Ollama, vLLM, OpenAI, Anthropic, or Gemini.
+   - `/mode`: Toggle between `[ 🔍 PLAN ]` and `[ 🔨 BUILD ]` with one tap.
+   - `/vms`: Quick compute instance status and management.
+3. **Mobile Blast-Radius Approval Gate**:
+   - When Zeus detects a destructive action (e.g. `terraform apply` with resource destructions, `terminate_instance`, `delete_ecs_service`), it halts execution and pushes a high-priority card to Telegram:
+     ```text
+     🚨 DESTRUCTIVE OPERATION DETECTED
+     Action: Terminate EC2 Instance
+     Target: i-0a1b2c3d4e5f (Production-API-Gateway)
+     Blast Radius: 1 Compute Resource
+     ⚠️ This action CANNOT be undone.
+
+     [ ✅ Confirm Delete ]        [ ❌ Abort ]
+     ```
+   - Approve or abort directly from your phone with a single tap.
+4. **Dual-Stream Delivery**:
+   - Compact, high-signal summaries in chat.
+   - Massive outputs (e.g., full `infra.md` reports, detailed `terraform plan` logs) sent as downloadable document attachments.
+5. **Strict Security Whitelist**:
+   - Configurable `allowed_chat_ids` ensures only authorized team members can interact with the bot.
+
+---
+
+### 5. 🔍 Natural Language Cloud Discovery & `infra.md` Exporter
 - **Ask Your Cloud Anything**:
   - *"Show all my VPCs and their CIDR ranges across AWS and Alibaba Cloud."*
   - *"List all subnets and vSwitches with their IP allocations."*
   - *"What ECS services/clusters or EC2 instances are currently running?"*
   - *"Which instances have public IPs exposed to the internet?"*
 - **One-Click `infra.md` Export**:
-  - Run `//export infra.md` or prompt *"Export my infrastructure to infra.md"*.
-  - Generates a single, comprehensive Markdown audit documentation file capturing:
-    - Overall topology overview and multi-cloud breakdown.
-    - VPC tables (VPC IDs, CIDR blocks, regions).
-    - Subnet & vSwitch tables (Zone, CIDR, available IPs, route table links).
-    - Compute inventory (Instance/ECS names, IDs, Public & Private IPs, state, instance types).
-    - Security Group & exposed port summaries.
-    - Custom notes, tags, and ownership details.
+  - Run `//export infra.md` or type `/infra` in Telegram.
+  - Generates a comprehensive Markdown audit capturing VPCs, CIDRs, subnets, compute fleet, security groups, and hybrid interconnects.
 
-### 2. 🧠 Persistent Project Memory & Network Constraints (Hermes Philosophy)
-- **Avoid Costly Architectural Mistakes**:
+---
+
+### 6. 🧠 Persistent Project Memory & Network Constraints (Hermes Engine)
+- **Avoid Costly Architectural Collisions**:
   - Remembers whether your environment is **On-Premise**, **Hybrid**, or **Multi-Cloud**.
-  - Stores existing **AWS Direct Connect (DX)** circuits, **Site-to-Site VPN** tunnels, **Transit Gateways**, and reserved on-prem IP subnets.
-- **Natural Language & Command Memory Input**:
-  - *"Zeus, remember that our on-prem datacenter uses 192.168.0.0/16 and connects to AWS via Direct Connect with ASN 65000."*
-  - *"Remember: All database instances must be isolated in private subnets with no internet gateway route."*
-  - Command: `//memory` or `//memory add "<rule>"`.
+  - Stores existing **Direct Connect (DX)** links, **Site-to-Site VPN** tunnels, Transit Gateways, and reserved CIDRs in `.zeus/memory.yaml`.
 - **Pre-Execution Guardrails**:
-  - Before generating or applying Terraform, Zeus automatically checks proposed CIDRs and routes against saved memory.
-  - Automatically alerts: `⚠️ Overlap Warning: Proposed CIDR 192.168.1.0/24 conflicts with your on-prem Direct Connect range (192.168.0.0/16) stored in project memory.`
+  - Automatically flags CIDR collisions before generating or applying Terraform code:
+    `⚠️ Overlap Warning: Proposed CIDR 192.168.1.0/24 conflicts with on-prem Direct Connect range (192.168.0.0/16) in project memory.`
 
-### 3. ⚡ Minimal-Token Tool Pipeline & Smart Error Diagnostics (Pi Philosophy)
+---
+
+### 7. ⚡ Minimal-Token Pipeline & Smart Error Diagnostics (Pi Philosophy)
 - **Dual-Stream Execution**:
-  - Streams full live logs (ANSI colors, progress bars) to the terminal for the human operator.
-  - **Compresses and extracts high-signal summaries** for the LLM tool response to conserve context tokens and prevent context degradation.
-- **Task-Focused Reading**:
-  - Instead of dumping entire 5,000-line cloud state files or multi-megabyte build logs into prompt memory, specialized reading filters (`summarize_state`, `extract_tf_plan`, `filter_jenkins_tail`) extract only the exact lines pertinent to the current task.
-- **Smart Terraform Error Parser**:
-  - Automatically intercepts Terraform failures (`terraform validate`, `terraform plan`, `terraform apply`).
-  - Strips noisy telemetry, stack dumps, and ANSI escapes.
-  - Extracts pinpoint diagnostics:
-    - **File & Line**: `main.tf:34`
-    - **Offending Code Snippet**: `instance_type = "t3.micr"`
-    - **Root Cause & Suggestion**: `"t3.micr" is invalid; did you mean "t3.micro"?`
-  - Explains the exact remediation step directly to the user and feeds clean context to the agent for instant self-correction.
-- **Smart Jenkins Error Parser & Build Windowing**:
-  - Intercepts failed Jenkins builds via the Pipeline Graph API (`/wfapi/describe`).
-  - Automatically isolates the **exact stage that failed** (e.g. `[Stage: Docker Build]` or `[Stage: Unit Tests]`).
-  - Windows only the relevant 25 lines of the error stack instead of dumping a 10MB console log.
-  - Generates a clean diagnostic card:
-    ```text
-    🚨 JENKINS BUILD FAILURE
-    Job: deploy-production-backend #42
-    Failed Stage: [Docker Build] (Duration: 1m 12s)
+  - Streams full live terminal output to the human operator.
+  - Compresses execution results into high-signal summaries ($< 250$ tokens) for LLM context.
+- **Smart Terraform & Jenkins Error Parsers**:
+  - Strips ANSI colors and noisy banners.
+  - Pinpoints exact file, line, offending code block, root cause, and suggested remediation.
 
-       > Step: sh 'docker build -t app:v2.1 .'
-       > Error: Dockerfile:14: COPY failed: file not found in build context: config/prod.json
+---
 
-    ❌ Cause: Missing build artifact 'config/prod.json'.
-    💡 Suggested Fix: Ensure config/prod.json is committed or generated in a previous pipeline stage.
-    ```
-
-### 4. 🛡️ Strict Permission Gates & Blast-Radius Protection
-- **No Silent Deletions**: Zeus enforces a mandatory human-in-the-loop checkpoint before **any** destructive cloud action:
-  - Deleting or terminating any ECS task, service, or EC2/Alibaba Cloud instance.
-  - Destroying infrastructure via `terraform destroy` or `terraform apply` when resource replacements/deletions are detected.
-  - Modifying critical security groups or routing tables.
-- **Blast-Radius Inspection**: Zeus parses the exact diff, highlights resources marked for destruction in red, and demands explicit typed confirmation:
-  ```
-  ⚠️  DESTRUCTIVE ACTION WARNING:
-      Zeus detected that the following 2 resources will be DESTROYED:
-      - aws_ecs_service.api_gateway
-      - aws_instance.legacy_worker_01
-
-  Type 'CONFIRM-DELETE' to proceed or press [Esc] to cancel.
-  ```
-
-### 5. 🏗️ Agentic Terraform Engine
-- **Preflight Environment Validation**: Automatically validates that `terraform` binary is installed in `$PATH`. If missing, Zeus outputs an actionable remediation diagnostic and install instructions.
-- **Agentic HCL Generation & Modification**: Generates modular Terraform code following HashiCorp best practices (`main.tf`, `variables.tf`, `outputs.tf`, `providers.tf`).
-- **Interactive Guardrail Loop**:
-  1. HCL Code Generation / Modification
-  2. Syntax & Linting (`terraform fmt`, `terraform validate`)
-  3. Execution Plan (`terraform plan -out=tfplan`) with parsed blast-radius analysis
-  4. User confirmation & approval checkpoint
-  5. Controlled execution (`terraform apply tfplan`)
-
-### 6. 🚦 Jenkins Automation Hub & Multi-Cloud Fleet Jobs
-- **Connectivity & Credential Gate**: Verifies Jenkins connectivity (CLI or REST API via URL + User API Token). Clear error notification with configuration prompts if unreachable.
-- **Token-Minimal Pipeline Control**: Trigger parameterized builds, inspect running pipeline stages, and stream progressive logs with automated windowing.
-- **DevOps Loop**: Connects Terraform provisioning output directly into Jenkins pipeline parameters for downstream application deployment.
-- **Multi-Cloud Fleet Jobs (Planned Capability)**:
-  - Automates operational tasks across heterogeneous cloud fleets (AWS EC2, Alibaba Cloud ECS, and generic servers) by delegating to preconfigured Jenkins jobs.
-  - **Featured Example: Install Docker Across Selected Cloud VMs**:
-    - **Scenario**: An engineer selects 3 AWS EC2 instances and 2 Alibaba Cloud ECS instances using `//VMs` or conversational queries.
-    - **Step 1: Target Review (Plan Mode)**: Zeus displays the selected instances, cloud providers, private/public IPs, and parameter preview without running any tasks.
-    - **Step 2: Execution (Build Mode)**: Upon approval, Zeus triggers the preconfigured `Install Docker` job on Jenkins, passing the selected instance IDs and parameters.
-    - **Per-Instance Structured Outcomes**:
-      ```text
-      ┌────────────────────────────────────────────────────────────────────────────────────────┐
-      │                   MULTI-CLOUD FLEET JOB: Install Docker (Job #142)                     │
-      ├──────────────────┬──────────────┬──────────────┬────────────────────────┬──────────────┤
-      │ INSTANCE ID      │ PROVIDER     │ IP           │ OUTCOME                │ DETAILS      │
-      ├──────────────────┼──────────────┼──────────────┼────────────────────────┼──────────────┤
-      │ i-0a1b2c3d4e5f   │ AWS (EC2)    │ 54.210.12.34 │ Installed              │ v26.1.1, OK  │
-      │ i-0b2c3d4e5f6a   │ AWS (EC2)    │ 54.210.12.35 │ Already installed      │ v25.0.3, OK  │
-      │ i-0c3d4e5f6a7b   │ AWS (EC2)    │ 54.210.12.36 │ Installed              │ v26.1.1, OK  │
-      │ i-8vb123456789   │ Ali (ECS)    │ 47.88.12.30  │ Installed              │ v26.1.1, OK  │
-      │ i-8vb987654321   │ Ali (ECS)    │ 47.88.12.31  │ Failed                 │ SSH timeout  │
-      └──────────────────┴──────────────┴──────────────┴────────────────────────┴──────────────┘
-      Summary: 3 Installed, 1 Already installed and healthy, 1 Failed.
-      👉 Retry Failed: Re-run only on failed instances with a single command.
-      ```
-    - **Partial Success & Targeted Retries**: If any instance fails (e.g. SSH timeout or package lock), Zeus reports the exact failure reason and allows the operator to retry *only* the failed nodes without touching the successfully configured VMs.
-  - **Artifact & File Attachment Support**:
-    - The same workflow optionally accepts an artifact or configuration file (e.g., an `nginx.conf`, application deployment `.tar.gz`, or security audit script). Zeus uploads or references the artifact with the Jenkins job to distribute and apply it across the target fleet.
-
-### 7. 🎨 Diagram-to-Terraform (Draw.io & Vision Pipeline)
+### 8. 🎨 Diagram-to-Terraform (Draw.io & Vision Pipeline)
 - **Draw.io (`.drawio`, `.xml`) Native Parser**:
-  - Parses mxGraph XML hierarchies (VPCs, Subnets, Security Groups, EC2/ECS instances, Load Balancers, Route Tables, Gateways).
-  - Preserves structural relationships (e.g., node inside a subnet container inherits CIDR and subnet placement).
-- **Multimodal Diagram Vision Parser (PNG, JPEG, WebP)**:
-  - Uses multimodal AI vision to decompose architecture diagrams into cloud components, ingress/egress relationships, and network boundaries.
-- **Full Transparency & Review**:
-  - Displays generated Terraform code side-by-side or in structured preview files before touching the disk.
-  - Automatically executes `terraform init`, `terraform plan`, and prompts for user approval before `terraform apply`.
-
-### 8. 🖥️ Unified Multi-Cloud VM & Compute Manager (`//VMs`)
-- **Multi-Cloud Provider Abstraction**:
-  - **AWS**: EC2 instances, ECS services/tasks (drawing from `ec2s`).
-  - **Alibaba Cloud**: ECS instances, vSwitches (drawing from `a1s`).
-  - **GCP / Azure / DigitalOcean / Hetzner**: Via cloud APIs.
-  - **Generic / Custom VPS / On-Premise**: Pure SSH (IP/Hostname + SSH Key / Password).
-- **Metadata & Notes**: Annotate any VM with custom notes, environment tags (`prod`, `staging`, `dev`), cloud provider flags, owner, and purpose.
-- **Remote Operations & SSH Access**:
-  - Direct one-click or command-line SSH session attachment (`//VMs ssh <id>`).
-  - Non-interactive batch command execution across one or multiple targets (`//VMs exec --tag=web "uptime"`).
-  - Cloud provider API actions (Start, Stop, Restart, Terminate, Snapshot).
-- **The `//VMs` Command Experience**:
-  - Fast CLI/slash-command mode for quick scripting (`//VMs list`, `//VMs add`, `//VMs edit`, `//VMs connect`).
-  - Optional Interactive TUI dashboard inspired by `k9s` / `ec2s` / `a1s`.
+  - Parses mxGraph XML hierarchies, container relationships, and network boundaries.
+- **Multimodal Architecture Vision**:
+  - Converts PNG/JPEG architecture diagrams into modular, validated Terraform HCL (`main.tf`, `variables.tf`, `outputs.tf`).
+- **Interactive Human Review**:
+  - Displays generated code, runs `terraform init` and `terraform plan`, and prompts for explicit approval before apply.
 
 ---
 
-## 💻 The `//VMs` Command Design
+### 9. 🖥️ Unified Multi-Cloud VM & Compute Manager (`//VMs`)
+- **Multi-Cloud Abstraction**:
+  - AWS EC2 & ECS, Alibaba Cloud ECS & vSwitches, Generic SSH servers.
+- **Fleet Jobs with Jenkins**:
+  - Trigger multi-instance operational jobs (e.g. *Install Docker across selected AWS & Alibaba instances*).
+  - Review targets in Plan Mode, authorize in Build Mode, and perform targeted retries on failed instances.
 
-When the user enters `//VMs` in the Zeus harness, the system provides both an interactive prompt and command arguments:
+---
 
-```bash
-# Display the interactive VM inventory dashboard
-//VMs
+## 💻 Command Reference
 
-# Quick command options
-//VMs list [--provider=aws|alicloud|generic] [--status=running]
-//VMs add  [--provider=<name>] [--ip=<ip>] [--key=<path>] [--notes="web server"]
-//VMs edit <vm-id> [--notes="new notes"] [--tags="prod,api"]
-//VMs ssh  <vm-id>
-//VMs exec <vm-id> -- <command>
-//VMs sync [--all]
-```
+Zeus commands use the `//` prefix in CLI and `/` prefix in Telegram:
 
-### VM Unified Schema:
-```json
-{
-  "id": "vm-us-east-web-01",
-  "name": "Production-API-Gateway",
-  "provider": "aws",
-  "native_id": "i-0a1b2c3d4e5f67890",
-  "region": "us-east-1",
-  "vpc_id": "vpc-0123456789abcdef0",
-  "subnet_id": "subnet-0123456789abcdef0",
-  "public_ip": "54.210.12.34",
-  "private_ip": "10.0.1.50",
-  "state": "running",
-  "ssh": {
-    "user": "ubuntu",
-    "key_path": "~/.ssh/zeus_prod.pem",
-    "port": 22
-  },
-  "notes": "Main FastAPI Gateway behind ALB - Managed by Zeus",
-  "tags": {
-    "env": "production",
-    "tier": "frontend",
-    "project": "ecommerce"
-  }
-}
+| Command | Telegram | Description |
+|---|---|---|
+| `//provider` | `/provider` | Open interactive provider switcher or set active model (`//provider set ollama qwen2.5-coder`) |
+| `//mode [plan\|build]` | `/mode` | Switch between safe read-only (`PLAN`) and mutation (`BUILD`) modes |
+| `//vms [list\|ssh\|exec]` | `/vms` | Open unified multi-cloud VM dashboard or execute remote actions |
+| `//mcp [list\|reload\|add]` | `/mcp` | Manage Model Context Protocol servers and inspect external tools |
+| `//skills [list\|info]` | `/skills` | Browse, inspect, or scaffold progressive disclosure agent skills |
+| `//plugin [list\|install]` | `/plugin` | Manage redistributable plugins and bundled capabilities |
+| `//export infra.md` | `/infra` | Generate and export complete infrastructure audit documentation |
+| `//memory [add]` | `/memory` | Inspect or record persistent infrastructure constraints in `memory.yaml` |
+| `//help` | `/help` | Display comprehensive command reference card |
+
+---
+
+## ⚙️ Configuration (`~/.zeus/config.yaml`)
+
+```yaml
+# Zeus Configuration
+default_provider: "anthropic"
+
+# Multi-LLM Providers
+providers:
+  ollama:
+    base_url: "http://localhost:11434"
+    default_model: "qwen2.5-coder:32b"
+  vllm:
+    base_url: "http://localhost:8000/v1"
+    api_key: "EMPTY"
+    default_model: "deepseek-ai/DeepSeek-R1-Distill-Qwen-32B"
+  anthropic:
+    api_key: "${ANTHROPIC_API_KEY}"
+    default_model: "claude-3-7-sonnet-20250219"
+  openai:
+    api_key: "${OPENAI_API_KEY}"
+    default_model: "gpt-4o"
+  gemini:
+    api_key: "${GEMINI_API_KEY}"
+    default_model: "gemini-2.5-pro"
+
+# Telegram Bot Gateway
+telegram:
+  enabled: true
+  bot_token: "${ZEUS_TELEGRAM_BOT_TOKEN}"
+  allowed_chat_ids:
+    - 123456789
+  require_admin_approval: true
+
+# Jenkins CI/CD
+jenkins:
+  url: "${JENKINS_URL}"
+  user: "${JENKINS_USER}"
+  api_token: "${JENKINS_API_TOKEN}"
 ```
 
 ---
 
-## 🛠️ Prerequisites & Error Handling Philosophy
-
-Zeus treats external dependencies with strict preflight verification. When an essential tool is absent, Zeus stops gracefully and offers exact instructions:
+## 🛠️ Prerequisites & Preflight Diagnostic Engine
 
 | Dependency | Purpose | Failure Mode & Remediation |
 |---|---|---|
-| **Terraform** (`terraform`) | IaC Generation, Plan, Apply | **Error:** `[ZEUS-ERR-101] Terraform binary not detected in PATH.`<br>Displays platform-specific installation command (e.g., `winget install HashiCorp.Terraform` or `brew install terraform`) with direct link to [HashiCorp Terraform Installation Guide](https://developer.hashicorp.com/terraform/install). |
-| **Jenkins** (`jenkins-cli` / API) | CI/CD Trigger & Status Polling | **Error:** `[ZEUS-ERR-102] Jenkins server unreachable or credentials unset.`<br>Prompts user to configure `JENKINS_URL`, `JENKINS_USER`, and `JENKINS_API_TOKEN` or review [Jenkins Installation Documentation](https://www.jenkins.io/doc/book/installing/). |
-| **Cloud Credentials** | AWS CLI (`~/.aws`), Alicloud (`~/.aliyun`), etc. | Notifies if profile or environment variables (`AWS_ACCESS_KEY_ID`, etc.) are unconfigured before initiating provider calls. |
-| **SSH Client** | Interactive VM Shells | Uses system `ssh` or embedded SSH client library (Go `golang.org/x/crypto/ssh` / Node `ssh2`). |
+| **Terraform** (`terraform`) | IaC Generation, Plan, Apply | **Error:** `[ZEUS-ERR-101] Terraform binary not detected in PATH.`<br>Displays platform-specific installation command (e.g., `winget install HashiCorp.Terraform` or `brew install terraform`) with direct link to docs. |
+| **Jenkins** (`jenkins-cli` / API) | CI/CD Trigger & Status Polling | **Error:** `[ZEUS-ERR-102] Jenkins server unreachable or credentials unset.`<br>Prompts user to configure `JENKINS_URL`, `JENKINS_USER`, and `JENKINS_API_TOKEN`. |
+| **Cloud Credentials** | AWS CLI (`~/.aws`), Alicloud (`~/.aliyun`) | Notifies if profile or environment variables (`AWS_ACCESS_KEY_ID`, etc.) are unconfigured before initiating provider calls. |
+| **SSH Client** | Interactive VM Shells | Uses system `ssh` or embedded SSH client library (`golang.org/x/crypto/ssh`). |
 
 ---
 
 ## 📂 Implementation Roadmap
 
-The project is structured into incremental, battle-tested milestones detailed in [`PLAN.md`](./PLAN.md):
+Detailed technical specifications and phase criteria are in [`PLAN.md`](./PLAN.md):
 
-1. **Phase 1: Agentic Core, Dependency Harness & Token-Minimal Pipeline** (Terraform & Jenkins preflight, error handling, tool harness, Plan/Build mode switch, Hermes-style persistent memory, Pi-style minimal-token output filter & smart Terraform/Jenkins error parsers).
+1. **Phase 1: Agentic Core, Multi-LLM Providers & Minimal-Token Pipeline** (`//provider`, Ollama, vLLM, OpenAI, Anthropic, Gemini, Terraform & Jenkins preflight, Plan/Build split, Hermes memory).
 2. **Phase 2: Visual IaC Engine** (Draw.io XML parser + PNG vision prompt -> HCL generator -> Review -> `init`/`plan`/`apply`).
-3. **Phase 3: Cloud Discovery, Unified Multi-Cloud VM Manager & Fleet Jobs** (`//VMs`, AWS/Alicloud VPCs/Subnets/vSwitches/ECS discovery, `infra.md` export, Multi-Cloud Fleet Jobs with Jenkins).
-4. **Phase 4: Strict Permission Guardrails & Agentic Ops** (Natural language query engine, destructive action confirmation gates, SSH sessions).
-5. **Phase 5: Extensibility & Packaging** (Plugins, CLI distribution, persistent SQLite state).
+3. **Phase 3: Cloud Discovery, Unified Multi-Cloud VM Manager & Fleet Jobs** (`//VMs`, AWS/Alicloud discovery, `infra.md` export, Jenkins fleet jobs).
+4. **Phase 4: Strict Permission Guardrails & Blast-Radius Engine** (Destructive action confirmation gates, SSH sessions).
+5. **Phase 5: Extensibility Ecosystem** (Model Context Protocol client, dynamic skills framework `SKILL.md`, plugin manager `plugin.yaml`).
+6. **Phase 6: Multi-Channel Operations & Telegram Bot Gateway** (Telegram daemon, mobile inline approvals, dual-stream file delivery).
+7. **Phase 7: Packaging & Documentation** (Standalone CLI binary distribution, comprehensive guides).
 
 ---
 
 ## 🤝 Contributing
 
-We welcome contributions! Please read our [**Contributing Guide (CONTRIBUTING.md)**](./CONTRIBUTING.md) for details on code style, safety guardrail policies, token efficiency requirements, and the PR process.
+We welcome contributions! Please review our [**Contributing Guide (CONTRIBUTING.md)**](./CONTRIBUTING.md) for details on code style, safety guardrail policies, token efficiency requirements, and PR workflows.
 
 ---
 
@@ -287,7 +355,7 @@ We welcome contributions! Please read our [**Contributing Guide (CONTRIBUTING.md
 - [earendil-works/pi](https://github.com/earendil-works/pi) - Lightweight agent harness architecture & token-minimal tool philosophy.
 - [NousResearch/hermes-agent](https://github.com/NousResearch/hermes-agent) - Persistent project memory and environmental constraint retention.
 - [anomalyco/opencode](https://github.com/anomalyco/opencode) - Multi-agent planning, Plan/Build mode separation, & developer experience.
-- [herdrdev/herdr](https://github.com/herdrdev/herdr) - Agent-driven multi-server session persistence.
+- [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) - Open standard for secure model-to-tool connectivity.
 - [PYTHON01100100/ec2s](https://github.com/PYTHON01100100/ec2s) - Terminal UI for Amazon EC2.
 - [PYTHON01100100/a1s](https://github.com/PYTHON01100100/a1s) - Terminal UI for Alibaba Cloud ECS.
 - [HashiCorp Terraform](https://developer.hashicorp.com/terraform) - Standard for Infrastructure as Code.

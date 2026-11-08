@@ -76,15 +76,22 @@ Zeus/
 │   ├── harness/               # Core ReAct loop, mode controller (Plan vs Build)
 │   ├── memory/                # Hermes-style persistent memory (.zeus/memory.yaml)
 │   ├── guardrails/            # Permission gates & blast-radius calculators
+│   ├── providers/
+│   │   ├── llm/               # Multi-LLM providers (Ollama, vLLM, OpenAI, Anthropic, Gemini)
+│   │   ├── aws/               # AWS EC2 & ECS adapter
+│   │   ├── alicloud/          # Alibaba Cloud ECS & vSwitch adapter
+│   │   └── generic_ssh/       # Generic SSH server adapter
+│   ├── mcp/                   # Model Context Protocol host/client (stdio & SSE transports)
+│   ├── skills/                # Progressive disclosure skills engine (.zeus/skills/ & SKILL.md)
+│   ├── plugins/               # Plugin packaging and lifecycle manager (plugin.yaml)
+│   ├── channels/              # Multi-channel delivery (CLI interactive & Telegram Bot)
+│   │   ├── cli/               # Bubbletea interactive terminal UI
+│   │   └── telegram/          # Telegram Bot daemon & mobile approval callbacks
 │   ├── tools/
 │   │   ├── terraform/         # Terraform tool suite & smart error parser
 │   │   ├── jenkins/           # Jenkins API client & log windowing engine
 │   │   ├── discovery/         # Cloud network discovery (VPCs, Subnets, vSwitches)
 │   │   └── vms/               # Unified VM registry (//VMs) & SSH runner
-│   ├── providers/
-│   │   ├── aws/               # AWS EC2 & ECS adapter
-│   │   ├── alicloud/          # Alibaba Cloud ECS & vSwitch adapter
-│   │   └── generic_ssh/       # Generic SSH server adapter
 │   ├── visual_iac/
 │   │   ├── drawio/            # mxGraph XML AST parser
 │   │   └── vision/            # Multimodal diagram vision synthesizer
@@ -143,6 +150,22 @@ When adding a tool to `pkg/tools`:
 ### Handling External CLI Outputs
 - Always strip ANSI color codes before passing stdout/stderr to LLM context filters.
 - Truncate long arrays and log outputs to a sensible window (maximum 25-30 lines).
+
+### Adding a New LLM Provider
+When implementing an LLM provider in `pkg/providers/llm`:
+- Implement the `LLMProvider` interface (`Generate`, `Stream`, `ListModels`, `HealthCheck`).
+- Support streaming tokens directly to UI handlers.
+- Handle rate limits (HTTP 429) gracefully to allow fallback triggers.
+
+### Authoring Skills (`SKILL.md`) & Plugins
+- Place project skills in `.zeus/skills/<skill-name>/SKILL.md`.
+- Keep YAML frontmatter concise (`name`, `description`, `mode`, `triggers`).
+- Ensure skills adhere to token efficiency guidelines (compact instructions, task-focused references).
+
+### Adding Channel Adapters (e.g. Telegram / Slack)
+- Implement `ChannelAdapter` in `pkg/channels/`.
+- Ensure destructive actions trigger interactive approval cards (`SendApprovalPrompt`) rather than bypassing human confirmation.
+- Keep chat responses concise; deliver extensive outputs (logs, `infra.md`) as file attachments.
 
 ---
 
